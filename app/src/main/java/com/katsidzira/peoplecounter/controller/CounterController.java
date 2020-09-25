@@ -1,5 +1,6 @@
 package com.katsidzira.peoplecounter.controller;
 
+
 import com.katsidzira.peoplecounter.model.Counter;
 
 public class CounterController {

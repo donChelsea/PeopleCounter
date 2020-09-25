@@ -1,5 +1,6 @@
 package com.katsidzira.peoplecounter;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     TextView peopleTv, totalTv;
     Button addButton, resetButton, removeButton;
     private CounterController controller;
+    private SharedPreferences sharedPreferences;
+    private static final String PREFERENCES = "MyPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,40 +34,33 @@ public class MainActivity extends AppCompatActivity {
         controller = CounterController.getInstance();
         controller.init();
 
+        sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+
         if (savedInstanceState != null) {
             updateViews();
             isEmpty();
             isOverCapacity();
         }
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.addPerson();
-                updateViews();
-                isEmpty();
-                isOverCapacity();
-            }
+        addButton.setOnClickListener(v -> {
+            controller.addPerson();
+            updateViews();
+            isEmpty();
+            isOverCapacity();
         });
 
-        removeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.removePerson();
-                updateViews();
-                isEmpty();
-                isOverCapacity();
-            }
+        removeButton.setOnClickListener(v -> {
+            controller.removePerson();
+            updateViews();
+            isEmpty();
+            isOverCapacity();
         });
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.resetCounter();
-                updateViews();
-                isEmpty();
-                isOverCapacity();
-            }
+        resetButton.setOnClickListener(v -> {
+            controller.resetCounter();
+            updateViews();
+            isEmpty();
+            isOverCapacity();
         });
 
     }
@@ -90,5 +86,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("total", controller.getCounter().getTotal());
+        outState.putInt("people", controller.getCounter().getPeople());
+    }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            updateViews();
+            isEmpty();
+            isOverCapacity();
+        }
+    }
 }
