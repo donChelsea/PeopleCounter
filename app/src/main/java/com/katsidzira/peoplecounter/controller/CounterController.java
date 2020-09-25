@@ -4,12 +4,20 @@ import com.katsidzira.peoplecounter.model.Counter;
 
 public class CounterController {
 
+    private static CounterController controller;
     private Counter counter;
-    private Boolean isAtMaxCapacity;
+    private static Boolean isAtMaxCapacity;
 
     public void init() {
         if (counter != null) return;
         counter = new Counter();
+    }
+
+    public static CounterController getInstance() {
+        if (controller == null) {
+            controller = new CounterController();
+        }
+        return controller;
     }
 
     public void addPerson() {

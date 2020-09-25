@@ -1,5 +1,7 @@
 package com.katsidzira.peoplecounter;
 
+import android.graphics.Color;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -26,11 +28,14 @@ public class MainActivity extends AppCompatActivity {
 
         removeButton.setVisibility(View.INVISIBLE);
 
-        controller = new CounterController();
+        controller = CounterController.getInstance();
         controller.init();
 
-        peopleTv.setText(String.valueOf(controller.getCounter().getPeople()));
-        totalTv.setText(String.valueOf(controller.getCounter().getTotal()));
+        if (savedInstanceState != null) {
+            updateViews();
+            isEmpty();
+            isOverCapacity();
+        }
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 controller.addPerson();
                 updateViews();
                 isEmpty();
+                isOverCapacity();
             }
         });
 
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 controller.removePerson();
                 updateViews();
                 isEmpty();
+                isOverCapacity();
             }
         });
 
@@ -55,14 +62,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 controller.resetCounter();
                 updateViews();
+                isEmpty();
+                isOverCapacity();
             }
         });
 
     }
 
     private void updateViews() {
-        peopleTv.setText(String.valueOf(controller.getCounter().getPeople()));
-        totalTv.setText(String.valueOf(controller.getCounter().getTotal()));
+        peopleTv.setText(controller.getCounter().getPeople() + " people");
+        totalTv.setText("Total: " + controller.getCounter().getTotal());
     }
 
     private void isEmpty() {
@@ -72,4 +81,14 @@ public class MainActivity extends AppCompatActivity {
             removeButton.setVisibility(View.VISIBLE);
         }
     }
+
+    private void isOverCapacity() {
+        if (controller.getCounter().getPeople() >= 15) {
+            peopleTv.setTextColor(Color.RED);
+        } else {
+            peopleTv.setTextColor(Color.BLACK);
+        }
+    }
+
+
 }
