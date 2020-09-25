@@ -22,7 +22,7 @@ public class CounterController {
     public void removePerson() {
         checkCapacity();
 
-        counter.setPeople(counter.getPeople() + 1);
+        counter.setPeople(counter.getPeople() - 1);
     }
 
     public void resetCounter() {
@@ -30,7 +30,7 @@ public class CounterController {
         counter.setPeople(0);
     }
 
-    public void checkCapacity() {
+    private void checkCapacity() {
         if (counter.getPeople() >= 15) {
             isAtMaxCapacity = true;
         } else {
