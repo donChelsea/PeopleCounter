@@ -28,13 +28,12 @@ public class MainActivity extends AppCompatActivity {
         removeButton = findViewById(R.id.button_remove);
 
         peopleTv.setText(R.string.people_start);
+        peopleTv.setTextColor(Color.BLACK);
         totalTv.setText(R.string.total_start);
         removeButton.setVisibility(View.INVISIBLE);
 
         controller = CounterController.getInstance();
         controller.init();
-
-
 
         addButton.setOnClickListener(v -> {
             controller.addPerson();
@@ -72,13 +71,14 @@ public class MainActivity extends AppCompatActivity {
     private void isEmpty() {
         if (controller.getCounter().getPeople() == 0) {
             removeButton.setVisibility(View.INVISIBLE);
+            peopleTv.setTextColor(Color.BLACK);
         } else {
             removeButton.setVisibility(View.VISIBLE);
         }
     }
 
     private void isOverCapacity() {
-        if (controller.getAtMaxCapacity()) {
+        if (controller.getIsAtMaxCapacity()) {
             peopleTv.setTextColor(Color.RED);
         } else {
             peopleTv.setTextColor(Color.BLACK);

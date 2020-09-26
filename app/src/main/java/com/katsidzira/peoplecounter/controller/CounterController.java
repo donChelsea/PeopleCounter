@@ -51,7 +51,7 @@ public class CounterController {
         return counter;
     }
 
-    public Boolean getAtMaxCapacity() {
+    public Boolean getIsAtMaxCapacity() {
         return isAtMaxCapacity;
     }
 }
