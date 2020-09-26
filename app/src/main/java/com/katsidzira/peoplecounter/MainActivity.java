@@ -34,25 +34,27 @@ public class MainActivity extends AppCompatActivity {
         controller = CounterController.getInstance();
         controller.init();
 
+
+
         addButton.setOnClickListener(v -> {
             controller.addPerson();
+            isOverCapacity();
             updateViews();
             isEmpty();
-            isOverCapacity();
         });
 
         removeButton.setOnClickListener(v -> {
             controller.removePerson();
+            isOverCapacity();
             updateViews();
             isEmpty();
-            isOverCapacity();
         });
 
         resetButton.setOnClickListener(v -> {
             controller.resetCounter();
+            isOverCapacity();
             updateViews();
             isEmpty();
-            isOverCapacity();
         });
 
     }
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void isOverCapacity() {
-        if (controller.getCounter().getPeople() >= 15) {
+        if (controller.getAtMaxCapacity()) {
             peopleTv.setTextColor(Color.RED);
         } else {
             peopleTv.setTextColor(Color.BLACK);

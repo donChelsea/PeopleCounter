@@ -7,7 +7,7 @@ public class CounterController {
 
     private static CounterController controller;
     private Counter counter;
-    private static Boolean isAtMaxCapacity;
+    private static Boolean isAtMaxCapacity = false;
 
     public void init() {
         if (counter != null) return;
@@ -22,16 +22,16 @@ public class CounterController {
     }
 
     public void addPerson() {
-        checkCapacity();
-
         counter.setTotal(counter.getTotal() + 1);
         counter.setPeople(counter.getPeople() + 1);
+
+        checkCapacity();
     }
 
     public void removePerson() {
-        checkCapacity();
-
         counter.setPeople(counter.getPeople() - 1);
+
+        checkCapacity();
     }
 
     public void resetCounter() {
@@ -40,7 +40,7 @@ public class CounterController {
     }
 
     private void checkCapacity() {
-        if (counter.getPeople() >= 15) {
+        if (counter.getPeople() >= 16) {
             isAtMaxCapacity = true;
         } else {
             isAtMaxCapacity = false;
