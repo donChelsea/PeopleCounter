@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PeopleCounter</string>
-    <string name="people">0 people</string>
-    <string name="total">Total: 0</string>
+    <string name="people_start">0 people</string>
+    <string name="total_start">Total: 0</string>
     <string name="reset">Reset</string>
     <string name="minus_symbol">-</string>
     <string name="add_symbol">+</string>

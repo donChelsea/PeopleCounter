@@ -1,8 +1,6 @@
 package com.katsidzira.peoplecounter;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,11 +10,11 @@ import android.widget.TextView;
 import com.katsidzira.peoplecounter.controller.CounterController;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TOTAL = "total";
+    private static final String PEOPLE = "people";
     TextView peopleTv, totalTv;
     Button addButton, resetButton, removeButton;
     private CounterController controller;
-    private SharedPreferences sharedPreferences;
-    private static final String PREFERENCES = "MyPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +27,12 @@ public class MainActivity extends AppCompatActivity {
         resetButton = findViewById(R.id.button_reset);
         removeButton = findViewById(R.id.button_remove);
 
+        peopleTv.setText(R.string.people_start);
+        totalTv.setText(R.string.total_start);
         removeButton.setVisibility(View.INVISIBLE);
 
         controller = CounterController.getInstance();
         controller.init();
-
-        sharedPreferences = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-
-        if (savedInstanceState != null) {
-            updateViews();
-            isEmpty();
-            isOverCapacity();
-        }
 
         addButton.setOnClickListener(v -> {
             controller.addPerson();
@@ -65,10 +57,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateViews() {
-        peopleTv.setText(controller.getCounter().getPeople() + " people");
-        totalTv.setText("Total: " + controller.getCounter().getTotal());
+    private void updateViews(int... values) {
+        if (values.length != 0) {
+            ifOnSavedInstanceState(values);
+        } else {
+            peopleTv.setText(controller.getCounter().getPeople() + " people");
+            totalTv.setText("Total: " + controller.getCounter().getTotal());
+        }
     }
+
 
     private void isEmpty() {
         if (controller.getCounter().getPeople() == 0) {
@@ -86,18 +83,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void ifOnSavedInstanceState(int... values) {
+        int total = values[0];
+        int people = values[1];
+
+        totalTv.setText("Total: " + total);
+        peopleTv.setText(people + " people");
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("total", controller.getCounter().getTotal());
-        outState.putInt("people", controller.getCounter().getPeople());
+        outState.putInt(TOTAL, controller.getCounter().getTotal());
+        outState.putInt(PEOPLE, controller.getCounter().getPeople());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState != null) {
-            updateViews();
+            updateViews(savedInstanceState.getInt(TOTAL), savedInstanceState.getInt(PEOPLE));
             isEmpty();
             isOverCapacity();
         }
