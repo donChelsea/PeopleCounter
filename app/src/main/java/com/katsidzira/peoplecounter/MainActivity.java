@@ -12,6 +12,7 @@ import com.katsidzira.peoplecounter.controller.CounterController;
 public class MainActivity extends AppCompatActivity {
     private static final String TOTAL = "total";
     private static final String PEOPLE = "people";
+    private static final String CAPACITY = "capacity";
     TextView peopleTv, totalTv;
     Button addButton, resetButton, removeButton;
     private CounterController controller;
@@ -58,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateViews(int... values) {
-        if (values.length != 0) {
-            ifOnSavedInstanceState(values);
+    private void updateViews(int... restoredCounts) {
+        if (restoredCounts.length != 0) {
+            ifOnSavedInstanceState(restoredCounts);
         } else {
             peopleTv.setText(controller.getCounter().getPeople() + " people");
             totalTv.setText("Total: " + controller.getCounter().getTotal());
@@ -77,8 +78,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void isOverCapacity() {
-        if (controller.getIsAtMaxCapacity()) {
+    private void isOverCapacity(boolean... restoredCapacity) {
+        boolean isAtCapacity = false;
+        if (restoredCapacity.length != 0) {
+            isAtCapacity = restoredCapacity[0];
+        }
+        if (controller.getIsAtMaxCapacity() || isAtCapacity) {
             peopleTv.setTextColor(Color.RED);
         } else {
             peopleTv.setTextColor(Color.BLACK);
@@ -98,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(TOTAL, controller.getCounter().getTotal());
         outState.putInt(PEOPLE, controller.getCounter().getPeople());
+        outState.putBoolean(CAPACITY, controller.getIsAtMaxCapacity());
     }
 
     @Override
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             updateViews(savedInstanceState.getInt(TOTAL), savedInstanceState.getInt(PEOPLE));
             isEmpty();
-            isOverCapacity();
+            isOverCapacity(savedInstanceState.getBoolean(CAPACITY));
         }
     }
 }
